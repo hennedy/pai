@@ -1,0 +1,32 @@
+{
+  "name": "pai-v1",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de Gestao de Rede de Padarias",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "npm run dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "build": "npm run build -w packages/database && npm run build -w packages/types && npm run build -w packages/utils && npm run build -w apps/api && npm run build -w apps/web",
+    "db:generate": "npm run generate -w packages/database",
+    "db:migrate": "npm run migrate -w packages/database",
+    "db:seed": "npm run seed -w packages/database",
+    "db:studio": "npm run studio -w packages/database",
+    "lint": "concurrently \"npm run lint -w apps/api\" \"npm run lint -w apps/web\"",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.1"
+  },
+  "dependencies": {
+    "@fastify/jwt": "10.0.0",
+    "fastify": "5.8.4",
+    "next": "14.2.35"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@pai/print-agent",
+  "version": "1.0.0",
+  "description": "Agente local de impressão ESC/POS via TCP — roda na mesma rede da impressora",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,2085 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ===================== ENUMS =====================
+
+// RoleName removido - perfis agora sao dinamicos (String livre)
+
+enum UnitStatus {
+  ativo
+  inativo
+}
+
+enum UserStatus {
+  ativo
+  inativo
+}
+
+enum PurchaseCycleStatus {
+  aberto
+  fechado
+  reaberto
+  consolidado
+}
+
+enum StockEntryType {
+  entrada
+  saida
+  ajuste
+  perda
+}
+
+enum LossType {
+  quebra
+  vencimento
+  erro_operacional
+  roubo
+  outro
+}
+
+enum ProductStatus {
+  ativo
+  inativo
+}
+
+enum RecipeStatus {
+  ativo
+  inativo
+}
+
+enum ProductionOrderStatus {
+  planejada
+  em_andamento
+  concluida
+  cancelada
+}
+
+enum Turno {
+  manha
+  tarde
+  noite
+}
+
+enum ChecklistHorario {
+  manha
+  tarde
+  noite
+  abertura
+  fechamento
+}
+
+enum ChecklistItemType {
+  checkbox
+  texto
+  foto
+  numero
+  estoque
+  estrelas
+}
+
+enum ChecklistExecutionStatus {
+  pendente
+  concluido
+  atrasado
+}
+
+enum OccurrenceType {
+  operacional
+  equipamento
+  pessoal
+  qualidade
+  seguranca
+  outro
+}
+
+enum OccurrencePriority {
+  baixa
+  media
+  alta
+  critica
+}
+
+enum OccurrenceStatus {
+  aberta
+  em_andamento
+  resolvida
+  encerrada
+}
+
+enum UtensilStatus {
+  disponivel
+  em_uso
+  manutencao
+  inativo
+}
+
+enum UtensilMovementType {
+  entrada
+  saida
+  transferencia
+}
+
+enum UtensilCountType {
+  contagem
+  reposicao
+}
+
+enum IntegrationStatus {
+  ativo
+  inativo
+}
+
+enum UnitIntegrationType {
+  google
+  cardapioweb
+  ifood
+  whatsapp_avisos
+  whatsapp_frente_loja
+  whatsapp_producao
+  whatsapp_gerencia
+  outro
+}
+
+enum IntegrationLogType {
+  entrada
+  saida
+}
+
+enum IntegrationLogStatus {
+  sucesso
+  falha
+}
+
+enum NotificationType {
+  estoque_minimo
+  ciclo_compras
+  checklist_atrasado
+  ocorrencia_critica
+  producao_estoque_insuficiente
+  geral
+}
+
+// ===================== ENUMS RH =====================
+
+enum StatusCicloAvaliacao {
+  planejamento
+  em_andamento
+  encerrado
+}
+
+enum TipoAvaliacao {
+  autoavaliacao
+  gestor
+  par
+  subordinado
+  cliente_interno
+}
+
+enum StatusAvaliacao {
+  pendente
+  em_andamento
+  concluida
+  cancelada
+}
+
+enum StatusMeta {
+  em_andamento
+  concluida
+  nao_atingida
+  cancelada
+}
+
+enum TipoComunicado {
+  aviso
+  comunicado
+  politica
+  treinamento
+  outro
+}
+
+enum PrioridadeComunicado {
+  normal
+  importante
+  urgente
+}
+
+enum GeneroColaborador {
+  masculino
+  feminino
+  outro
+  prefiro_nao_informar
+}
+
+enum EstadoCivil {
+  solteiro
+  casado
+  divorciado
+  viuvo
+  uniao_estavel
+  outro
+}
+
+enum TipoContrato {
+  clt
+  pj
+  estagio
+  aprendiz
+  temporario
+  autonomo
+}
+
+enum StatusColaborador {
+  ativo
+  inativo
+  ferias
+  afastado
+  desligado
+}
+
+enum NivelCargo {
+  junior
+  pleno
+  senior
+  especialista
+  coordenador
+  gerente
+  diretor
+}
+
+enum StatusCargo {
+  ativo
+  inativo
+}
+
+enum StatusAdmissao {
+  rascunho
+  enviado
+  em_preenchimento
+  aguardando_aprovacao
+  aprovado
+  rejeitado
+  expirado
+}
+
+enum TipoDesligamento {
+  demissao_sem_justa_causa
+  demissao_por_justa_causa
+  pedido_demissao
+  acordo_mutuo
+  aposentadoria
+  falecimento
+  termino_contrato
+  outro
+}
+
+enum StatusDesligamento {
+  pendente
+  em_andamento
+  concluido
+  cancelado
+}
+
+enum StatusPeriodoAquisitivo {
+  em_curso
+  adquirido
+  vencendo
+  vencido
+}
+
+enum StatusFerias {
+  solicitado
+  aprovado
+  reprovado
+  programado
+  gozando
+  concluido
+  cancelado
+}
+
+enum TipoDocumentoRH {
+  contrato_trabalho
+  contrato_experiencia
+  termo_confidencialidade
+  atestado
+  declaracao
+  comprovante_residencia
+  identidade
+  cnh
+  certificado
+  outros
+}
+
+enum StatusDocumentoRH {
+  ativo
+  vencido
+  cancelado
+  pendente_assinatura
+}
+
+enum StatusHolerite {
+  rascunho
+  publicado
+  visualizado
+}
+
+enum TipoBeneficio {
+  vale_transporte
+  vale_refeicao
+  vale_alimentacao
+  plano_saude
+  plano_odontologico
+  seguro_vida
+  gympass
+  auxilio_creche
+  outros
+}
+
+enum StatusBeneficioColaborador {
+  ativo
+  inativo
+  suspenso
+}
+
+enum TipoExameOcupacional {
+  admissional
+  periodico
+  retorno_trabalho
+  mudanca_funcao
+  demissional
+}
+
+enum ResultadoExame {
+  apto
+  apto_com_restricoes
+  inapto
+}
+
+enum StatusExame {
+  agendado
+  realizado
+  vencido
+  cancelado
+}
+
+// ===================== ENUMS PONTO =====================
+
+enum TipoRegistroPonto {
+  entrada
+  saida_almoco
+  retorno_almoco
+  saida
+  entrada_extra
+  saida_extra
+}
+
+enum StatusRegistroPonto {
+  pendente
+  aprovado
+  ajustado
+  rejeitado
+}
+
+enum TipoOcorrenciaPonto {
+  falta
+  atraso
+  saida_antecipada
+  hora_extra
+  falta_justificada
+  folga_compensatoria
+  afastamento
+}
+
+enum StatusFechamentoPonto {
+  aberto
+  fechado
+  aprovado
+}
+
+enum TotemModulo {
+  checklists
+  contagem_utensilios
+  contagem_paes
+  contagem_descartes
+  contagem_transferencias
+  requisicoes
+}
+
+// ===================== MODELS =====================
+
+// --- Usuarios e Permissoes ---
+
+model User {
+  id        String     @id @default(uuid())
+  nome      String
+  email     String     @unique
+  username  String?    @unique
+  cpf       String?    @unique
+  senha     String
+  status    UserStatus @default(ativo)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  userUnits          UserUnit[]
+  permissions        UserPermission[]
+  auditLogs          AuditLog[]
+  purchaseRequests   PurchaseRequest[]
+  productionOrders   ProductionOrder[]
+  labels             Label[]
+  checklistExecutions ChecklistExecution[] @relation("ExecutadoPor")
+  checklistsAtribuidos ChecklistExecution[] @relation("AtribuidoA")
+  checklistTemplatesAtribuidos ChecklistTemplate[] @relation("TemplateAtribuido")
+  occurrencesCreated Occurrence[]         @relation("OccurrenceCreator")
+  occurrencesOwned   Occurrence[]         @relation("OccurrenceResponsible")
+  occurrenceComments OccurrenceComment[]
+  stockEntries       StockEntry[]
+  utensilMovements   UtensilMovement[]
+  utensilCounts         UtensilCount[]
+  descartesCount        DescartesCount[]
+  transferenciaCount    TransferenciaCount[]
+  telaContagens         TelaContagem[]
+  notifications         Notification[]
+  occurrenceHistory     OccurrenceHistory[]
+  purchaseCyclesCreated PurchaseCycle[]   @relation("CycleCreator")
+  purchaseCyclesClosed  PurchaseCycle[]   @relation("CycleCloser")
+  unitsResponsavel      Unit[]           @relation("UnitResponsavel")
+  colaborador           Colaborador?
+  admissoesCriadas         AdmissaoDigital[]      @relation("AdmissaoCriador")
+  admissoesAprovadas       AdmissaoDigital[]      @relation("AdmissaoAprovador")
+  desligamentosRegistrados ProcessoDesligamento[]
+  feriasSolicitadas        Ferias[]               @relation("FeriasSolicitante")
+  feriasAprovadas          Ferias[]               @relation("FeriasAprovador")
+  documentosUpload         DocumentoColaborador[]
+  holeritesCriados         Holerite[]
+  examesAgendados           ExameOcupacional[]
+  ajustesPontoAprovados     AjustePonto[]         @relation("AjusteAprovador")
+  fechamentosPontoAprovados FechamentoPonto[]     @relation("FechamentoAprovador")
+  ciclosAvaliacaoCriados    CicloAvaliacao[]      @relation("CiclosCriados")
+  metasCriadas              MetaColaborador[]     @relation("MetasCriadas")
+  comunicadosCriados        Comunicado[]          @relation("ComunicadosCriados")
+  encomendasCriadas         Encomenda[]           @relation("EncomendaCriador")
+  encomendasConcluidas      Encomenda[]           @relation("EncomendaConcluidor")
+
+  @@index([email])
+  @@index([status])
+}
+
+model Role {
+  id   String   @id @default(uuid())
+  nome String @unique
+
+  userUnits       UserUnit[]
+  rolePermissions RolePermission[]
+}
+
+model UserUnit {
+  id     String @id @default(uuid())
+  userId String
+  unitId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, unitId])
+  @@index([userId])
+  @@index([unitId])
+}
+
+model UserPermission {
+  id        String @id @default(uuid())
+  userId    String
+  modulo    String // ex: compras, estoque, producao
+  acao      String // ex: criar, editar, excluir, visualizar, ajustar
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, modulo, acao])
+  @@index([userId])
+}
+
+model RolePermission {
+  id       String   @id @default(uuid())
+  roleId   String
+  modulo   String   // ex: dashboard, unidades, usuarios, produtos, compras, estoque, producao, etiquetas, utensilios, checklist, ocorrencias, notificacoes, relatorios, integracoes, auditoria
+  acao     String   // ex: visualizar, criar, editar, excluir, gerenciar (acoes especiais do modulo)
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, modulo, acao])
+  @@index([roleId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  acao      String
+  entidade  String
+  entityId  String?
+  payload   Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entidade])
+  @@index([createdAt])
+}
+
+model SystemConfig {
+  id        String   @id @default(uuid())
+  chave     String   @unique
+  valor     String
+  updatedAt DateTime @updatedAt
+
+  @@index([chave])
+}
+
+// --- Unidades ---
+
+model Unit {
+  id                String     @id @default(uuid())
+  nome              String
+  razaoSocial       String?    // Razao social da unidade
+  cnpj              String?    // CNPJ da unidade
+  codigo            String     @unique
+  endereco          String?
+  telefone          String?
+  email             String?
+  responsavelId     String?
+  horarioAbertura   String?    // Ex: "06:00"
+  horarioFechamento String?    // Ex: "22:00"
+  diasFuncionamento Json?      // Ex: ["seg","ter","qua","qui","sex","sab"]
+  datasExcecao      Json?      // Ex: ["2026-12-25","2026-01-01"] - dias sem checklist
+  latitude          Float?     // Coordenada GPS da unidade
+  longitude         Float?     // Coordenada GPS da unidade
+  raioValidacaoMetros Int?     // Raio permitido para execucao de checklist (padrao 300m)
+  status            UnitStatus @default(ativo)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  responsavel         User?      @relation("UnitResponsavel", fields: [responsavelId], references: [id], onDelete: SetNull)
+  userUnits           UserUnit[]
+  purchaseCycles      PurchaseCycle[]
+  purchaseRequests    PurchaseRequest[]
+  stockEntries        StockEntry[]
+  stockBalances       StockBalance[]
+  productionOrders    ProductionOrder[]
+  labels              Label[]
+  checklistTemplates  ChecklistTemplate[]
+  checklistExecutions ChecklistExecution[]
+  occurrences         Occurrence[]
+  utensilMovements    UtensilMovement[]
+  utensilCounts             UtensilCount[]
+  descartesCount            DescartesCount[]
+  transferenciaOrigem       TransferenciaCount[] @relation("TransferenciaOrigem")
+  transferenciaDestino      TransferenciaCount[] @relation("TransferenciaDestino")
+  telaContagens             TelaContagem[]
+  notifications             Notification[]
+  integrations              UnitIntegration[]
+  colaboradores       Colaborador[]
+  colaboradorUnits    ColaboradorUnit[]
+  sectorUnits         SectorUnit[]
+  encomendas          Encomenda[]
+  impressoras         Impressora[]
+
+  @@index([status])
+  @@index([codigo])
+  @@index([responsavelId])
+}
+
+model Impressora {
+  id        String   @id @default(uuid())
+  nome      String
+  ip        String
+  porta     Int      @default(9100)
+  agentUrl  String?  // URL do agente local, ex: http://192.168.0.144:3456
+  setores   String[] // valores possiveis: "encomendas", "requisicao_producao"
+  unitId    String
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@index([unitId])
+}
+
+model Sector {
+  id        String   @id @default(uuid())
+  nome      String
+  status    ProductStatus @default(ativo)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  units              SectorUnit[]
+  checklistTemplates ChecklistTemplate[]
+}
+
+model SectorUnit {
+  sectorId  String
+  unitId    String
+
+  sector    Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  unit      Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@id([sectorId, unitId])
+  @@index([unitId])
+}
+
+model UnitIntegration {
+  id            String                 @id @default(uuid())
+  unitId        String
+  tipo          UnitIntegrationType
+  nome          String
+  status        IntegrationStatus      @default(inativo)
+  configuracao  Json?                  // Chaves API, tokens, URLs, grupo WhatsApp, etc.
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@unique([unitId, tipo])
+  @@index([unitId])
+  @@index([status])
+}
+
+// --- Compras ---
+
+model PurchaseCycle {
+  id              String              @id @default(uuid())
+  unitId          String?
+  titulo          String
+  dataAbertura    DateTime            @default(now())
+  dataFechamento  DateTime?
+  status          PurchaseCycleStatus @default(aberto)
+  criadoPorId     String
+  fechadoPorId    String?
+  motivoReabertura String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  unit      Unit?  @relation(fields: [unitId], references: [id])
+  criadoPor User   @relation("CycleCreator", fields: [criadoPorId], references: [id])
+  fechadoPor User? @relation("CycleCloser", fields: [fechadoPorId], references: [id])
+
+  requests PurchaseRequest[]
+
+  @@index([status])
+  @@index([unitId])
+  @@index([createdAt])
+}
+
+model PurchaseRequest {
+  id            String   @id @default(uuid())
+  cycleId       String
+  unitId        String
+  productId     String
+  quantidade    Float
+  observacao    String?
+  marca         String?
+  solicitadoPorId           String?
+  solicitadoColaboradorId   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  cycle                 PurchaseCycle @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+  unit                  Unit          @relation(fields: [unitId], references: [id])
+  product               Product       @relation(fields: [productId], references: [id])
+  solicitadoPor         User?         @relation(fields: [solicitadoPorId], references: [id])
+  solicitadoColaborador Colaborador?  @relation(fields: [solicitadoColaboradorId], references: [id])
+
+  @@index([cycleId])
+  @@index([unitId])
+  @@index([productId])
+  @@index([solicitadoPorId])
+  @@index([solicitadoColaboradorId])
+}
+
+// --- Estoque ---
+
+model Category {
+  id        String   @id @default(uuid())
+  nome      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
+  subcategories Subcategory[]
+  products      Product[]
+}
+
+model Subcategory {
+  id          String   @id @default(uuid())
+  nome        String
+  categoriaId String
+  createdAt   DateTime @default(now())
+
+  categoria Category  @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  products  Product[]
+
+  @@unique([categoriaId, nome])
+  @@index([categoriaId])
+}
+
+model Product {
+  id                 String        @id @default(uuid())
+  nome               String
+  sku                String?       @unique // Codigo interno do sistema (opcional)
+  categoriaId        String?
+  subcategoriaId     String?
+  unidadeMedida      String        @default("un") // kg, un, lt, etc.
+  codigoSistema      String?       // Codigo no sistema (opcional)
+  codigoCotacao      String?       // Codigo no clube da cotacao (opcional)
+  codigoBarras       String?       // Codigo de barras EAN (opcional)
+  isBalanca          Boolean       @default(false)
+  codigoBalanca      String?       // Codigo da balanca (se isBalanca = true)
+  isEtiqueta         Boolean       @default(false) // Gera etiqueta
+  validadeDias       Int?          // Dias de validade para etiqueta
+  isUtensilio        Boolean       @default(false) // E utensilio
+  controlaEstoque    Boolean       @default(true)  // Controla estoque
+  enviaProducao      Boolean       @default(false) // Envia para producao
+  isInsumo           Boolean       @default(false) // E insumo
+  participaCotacao   Boolean       @default(false) // Participa de cotacao de compras
+  estoqueMinimo      Float         @default(0)
+  custoMedio         Float         @default(0)
+  status             ProductStatus @default(ativo)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  categoria     Category?     @relation(fields: [categoriaId], references: [id])
+  subcategoria  Subcategory?  @relation(fields: [subcategoriaId], references: [id])
+
+  stockEntries      StockEntry[]
+  stockBalances     StockBalance[]
+  purchaseRequests  PurchaseRequest[]
+  recipeIngredients RecipeIngredient[]
+  labels            Label[]
+  labelTemplates    LabelTemplate[]
+  utensilCountItems       UtensilCountItem[]
+  descartesCountItems     DescartesCountItem[]
+  transferenciaCountItems TransferenciaCountItem[]
+
+  @@index([categoriaId])
+  @@index([subcategoriaId])
+  @@index([status])
+  @@index([sku])
+  @@index([codigoBarras])
+}
+
+model StockEntry {
+  id            String         @id @default(uuid())
+  productId     String
+  unitId        String
+  quantidade    Float
+  tipo          StockEntryType
+  motivo        String?
+  lote          String?
+  vencimento    DateTime?
+  lossType      LossType?
+  responsavelId String
+  createdAt     DateTime       @default(now())
+
+  product     Product @relation(fields: [productId], references: [id])
+  unit        Unit    @relation(fields: [unitId], references: [id])
+  responsavel User    @relation(fields: [responsavelId], references: [id])
+
+  @@index([productId])
+  @@index([unitId])
+  @@index([tipo])
+  @@index([createdAt])
+}
+
+model StockBalance {
+  id         String @id @default(uuid())
+  productId  String
+  unitId     String
+  quantidade Float  @default(0)
+  updatedAt  DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
+  unit    Unit    @relation(fields: [unitId], references: [id])
+
+  @@unique([productId, unitId])
+  @@index([productId])
+  @@index([unitId])
+}
+
+// --- Producao ---
+
+model Recipe {
+  id             String       @id @default(uuid())
+  nome           String
+  categoria      String?
+  rendimento     Float
+  unidadeMedida  String
+  custoEstimado  Float        @default(0)
+  status         RecipeStatus @default(ativo)
+  versao         Int          @default(1)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  ingredients      RecipeIngredient[]
+  productionOrders ProductionOrder[]
+  labels           Label[]
+  labelTemplates   LabelTemplate[]
+
+  @@index([status])
+}
+
+model RecipeIngredient {
+  id            String  @id @default(uuid())
+  recipeId      String
+  productId     String
+  quantidade    Float
+  unidadeMedida String
+  observacao    String?
+
+  recipe  Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([recipeId])
+  @@index([productId])
+}
+
+model ProductionOrder {
+  id                  String                @id @default(uuid())
+  unitId              String
+  recipeId            String
+  turno               Turno
+  quantidadePlanejada Float
+  quantidadeRealizada Float?
+  status              ProductionOrderStatus @default(planejada)
+  responsavelId       String
+  createdAt           DateTime              @default(now())
+  iniciadoAt          DateTime?
+  concluidoAt         DateTime?
+  updatedAt           DateTime              @updatedAt
+
+  unit        Unit   @relation(fields: [unitId], references: [id])
+  recipe      Recipe @relation(fields: [recipeId], references: [id])
+  responsavel User   @relation(fields: [responsavelId], references: [id])
+
+  ingredients ProductionOrderIngredient[]
+
+  @@index([unitId])
+  @@index([recipeId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ProductionOrderIngredient {
+  id                String @id @default(uuid())
+  productionOrderId String
+  productId         String
+  quantidade        Float
+  unidadeMedida     String
+
+  productionOrder ProductionOrder @relation(fields: [productionOrderId], references: [id], onDelete: Cascade)
+
+  @@index([productionOrderId])
+}
+
+// --- Etiquetas ---
+
+model Label {
+  id            String   @id @default(uuid())
+  unitId        String
+  recipeId      String?
+  productId     String?
+  descricao     String
+  lote          String
+  dataProducao  DateTime
+  dataValidade  DateTime?
+  responsavelId String
+  quantidade    Int      @default(1)
+  createdAt     DateTime @default(now())
+
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  recipe      Recipe?  @relation(fields: [recipeId], references: [id])
+  product     Product? @relation(fields: [productId], references: [id])
+  responsavel User     @relation(fields: [responsavelId], references: [id])
+
+  @@index([unitId])
+  @@index([createdAt])
+  @@index([lote])
+}
+
+model LabelTemplate {
+  id             String @id @default(uuid())
+  productId      String?
+  recipeId       String?
+  diasValidade   Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  product Product? @relation(fields: [productId], references: [id])
+  recipe  Recipe?  @relation(fields: [recipeId], references: [id])
+
+  @@index([productId])
+  @@index([recipeId])
+}
+
+// --- Utensilios ---
+
+model Utensil {
+  id         String        @id @default(uuid())
+  nome       String
+  descricao  String?
+  categoria  String?
+  patrimonio String        @unique
+  status     UtensilStatus @default(disponivel)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  movements UtensilMovement[]
+
+  @@index([status])
+  @@index([patrimonio])
+}
+
+model UtensilMovement {
+  id            String              @id @default(uuid())
+  utensilId     String
+  unitId        String
+  tipo          UtensilMovementType
+  responsavelId String
+  observacao    String?
+  createdAt     DateTime            @default(now())
+
+  utensil     Utensil @relation(fields: [utensilId], references: [id])
+  unit        Unit    @relation(fields: [unitId], references: [id])
+  responsavel User    @relation(fields: [responsavelId], references: [id])
+
+  @@index([utensilId])
+  @@index([unitId])
+  @@index([createdAt])
+}
+
+model UtensilCount {
+  id            String           @id @default(uuid())
+  unitId        String
+  turno         Turno
+  tipo          UtensilCountType
+  responsavelId String
+  observacao    String?
+  createdAt     DateTime         @default(now())
+
+  unit        Unit              @relation(fields: [unitId], references: [id])
+  responsavel User              @relation(fields: [responsavelId], references: [id])
+  items       UtensilCountItem[]
+
+  @@index([unitId])
+  @@index([responsavelId])
+  @@index([createdAt])
+  @@index([tipo])
+  @@index([turno])
+}
+
+model UtensilCountItem {
+  id              String       @id @default(uuid())
+  utensilCountId  String
+  productId       String
+  quantidade      Int
+
+  utensilCount UtensilCount @relation(fields: [utensilCountId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id])
+
+  @@index([utensilCountId])
+  @@index([productId])
+}
+
+// --- Contagem de Transferencias ---
+
+model TransferenciaCount {
+  id            String                   @id @default(uuid())
+  origemUnitId  String
+  destinoUnitId String
+  responsavelId String
+  observacao    String?
+  createdAt     DateTime                 @default(now())
+
+  origemUnit  Unit                     @relation("TransferenciaOrigem", fields: [origemUnitId], references: [id])
+  destinoUnit Unit                     @relation("TransferenciaDestino", fields: [destinoUnitId], references: [id])
+  responsavel User                     @relation(fields: [responsavelId], references: [id])
+  items       TransferenciaCountItem[]
+
+  @@index([origemUnitId])
+  @@index([destinoUnitId])
+  @@index([responsavelId])
+  @@index([createdAt])
+}
+
+model TransferenciaCountItem {
+  id                   String             @id @default(uuid())
+  transferenciaCountId String
+  productId            String
+  peso                 Float
+
+  transferenciaCount TransferenciaCount @relation(fields: [transferenciaCountId], references: [id], onDelete: Cascade)
+  product            Product            @relation(fields: [productId], references: [id])
+
+  @@index([transferenciaCountId])
+  @@index([productId])
+}
+
+// --- Contagem de Descartes ---
+
+model DescartesCount {
+  id            String               @id @default(uuid())
+  unitId        String
+  responsavelId String
+  observacao    String?
+  createdAt     DateTime             @default(now())
+
+  unit        Unit                 @relation(fields: [unitId], references: [id])
+  responsavel User                 @relation(fields: [responsavelId], references: [id])
+  items       DescartesCountItem[]
+
+  @@index([unitId])
+  @@index([responsavelId])
+  @@index([createdAt])
+}
+
+model DescartesCountItem {
+  id               String         @id @default(uuid())
+  descartesCountId String
+  productId        String
+  peso             Float          // peso em kg lido do codigo de balanca
+
+  descartesCount DescartesCount @relation(fields: [descartesCountId], references: [id], onDelete: Cascade)
+  product        Product        @relation(fields: [productId], references: [id])
+
+  @@index([descartesCountId])
+  @@index([productId])
+}
+
+// --- Telas de Pao Frances ---
+
+model TelaContagem {
+  id            String   @id @default(uuid())
+  unitId        String
+  responsavelId String
+  telasCruas    Int
+  telasAssadas  Int
+  vendidosTodos Boolean  @default(false)
+  horaFim       String?
+  observacao    String?
+  createdAt     DateTime @default(now())
+
+  unit        Unit @relation(fields: [unitId], references: [id])
+  responsavel User @relation(fields: [responsavelId], references: [id])
+
+  @@index([unitId])
+  @@index([responsavelId])
+  @@index([createdAt])
+}
+
+// --- Checklist ---
+
+model ChecklistTemplate {
+  id                 String            @id @default(uuid())
+  nome               String
+  sectorId           String?
+  unitId             String?
+  horario            ChecklistHorario
+  obrigatorio        Boolean           @default(false)
+  status             ProductStatus     @default(ativo)
+  icone              String?
+  tempoLimiteMinutos Int?              // Validade do checklist apos criado
+  recorrencia        Json?             // Configuracao de agendamento padrao
+  datasExcecao       Json?             // Ex: ["2026-12-25"] - dias sem checklist para este template
+  isAdhoc              Boolean           @default(false)
+  atribuidoAId         String?
+  responsavelColabId   String?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  unit               Unit?                @relation(fields: [unitId], references: [id])
+  sector             Sector?              @relation(fields: [sectorId], references: [id])
+  atribuidoA         User?                @relation("TemplateAtribuido", fields: [atribuidoAId], references: [id])
+  responsavelColab   Colaborador?         @relation("TemplateResponsavel", fields: [responsavelColabId], references: [id], onDelete: SetNull)
+  items              ChecklistItem[]
+  executions         ChecklistExecution[]
+
+  @@index([unitId])
+  @@index([sectorId])
+  @@index([atribuidoAId])
+  @@index([responsavelColabId])
+  @@index([horario])
+  @@index([status])
+}
+
+model ChecklistItem {
+  id              String            @id @default(uuid())
+  templateId      String
+  responsavelId   String?
+  descricao       String
+  ordem           Int
+  tipo            ChecklistItemType @default(checkbox)
+  obrigatorio     Boolean           @default(false)
+  exigeFoto       Boolean           @default(false)
+  exigeObservacao Boolean           @default(false)
+  isCritico       Boolean           @default(false)
+  condicaoAlerta  Json?
+  peso            Int               @default(1)
+  opcoes          Json?
+  rotulos         Json?
+
+  template    ChecklistTemplate       @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  responsavel Colaborador?            @relation("ItemResponsavel", fields: [responsavelId], references: [id], onDelete: SetNull)
+  responses   ChecklistItemResponse[]
+
+  @@index([templateId])
+  @@index([responsavelId])
+}
+
+model ChecklistExecution {
+  id              String                   @id @default(uuid())
+  templateId      String
+  unitId          String
+  turno           Turno
+  data            DateTime                 @db.Date
+  status          ChecklistExecutionStatus @default(pendente)
+  executadoPorId  String?
+  atribuidoAId    String?
+  responsavelId   String?
+  latitude        Float?
+  longitude       Float?
+  score           Float?
+  observacaoGeral String?
+  prazoLimite     DateTime?
+  iniciadoAt      DateTime                 @default(now())
+  concluidoAt     DateTime?
+
+  template        ChecklistTemplate        @relation(fields: [templateId], references: [id])
+  unit            Unit                     @relation(fields: [unitId], references: [id])
+  executadoPor    User?                    @relation("ExecutadoPor", fields: [executadoPorId], references: [id])
+  atribuidoA      User?                    @relation("AtribuidoA", fields: [atribuidoAId], references: [id])
+  responsavel     Colaborador?             @relation("ExecucaoResponsavel", fields: [responsavelId], references: [id], onDelete: SetNull)
+  responses       ChecklistItemResponse[]
+
+  @@index([templateId])
+  @@index([unitId])
+  @@index([data])
+  @@index([status])
+  @@index([responsavelId])
+}
+
+model ChecklistItemResponse {
+  id           String             @id @default(uuid())
+  executionId  String
+  itemId       String
+  resposta      String?
+  conformidade  String?            // Rotulo de conformidade selecionado (ex: "Conforme")
+  fotoUrl       String?
+  videoUrl      String?
+  geolocation   Json?
+  naoAplicavel  Boolean            @default(false)
+  createdAt     DateTime           @default(now())
+
+  execution    ChecklistExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  item         ChecklistItem      @relation(fields: [itemId], references: [id])
+
+  @@index([executionId])
+  @@index([itemId])
+}
+
+// --- Ocorrencias ---
+
+model Occurrence {
+  id            String             @id @default(uuid())
+  unitId        String
+  titulo        String
+  descricao     String
+  tipo          OccurrenceType
+  setor         String?
+  prioridade    OccurrencePriority @default(media)
+  status        OccurrenceStatus   @default(aberta)
+  responsavelId String?
+  criadoPorId   String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  resolvidoAt   DateTime?
+
+  unit        Unit  @relation(fields: [unitId], references: [id])
+  responsavel User? @relation("OccurrenceResponsible", fields: [responsavelId], references: [id])
+  criadoPor   User  @relation("OccurrenceCreator", fields: [criadoPorId], references: [id])
+
+  comments OccurrenceComment[]
+  history  OccurrenceHistory[]
+
+  @@index([unitId])
+  @@index([tipo])
+  @@index([prioridade])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OccurrenceComment {
+  id           String   @id @default(uuid())
+  occurrenceId String
+  userId       String
+  texto        String
+  createdAt    DateTime @default(now())
+
+  occurrence Occurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@index([occurrenceId])
+}
+
+model OccurrenceHistory {
+  id           String   @id @default(uuid())
+  occurrenceId String
+  userId       String
+  statusDe     OccurrenceStatus
+  statusPara   OccurrenceStatus
+  observacao   String?
+  createdAt    DateTime @default(now())
+
+  occurrence Occurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@index([occurrenceId])
+  @@index([createdAt])
+}
+
+// --- Notificacoes ---
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  unitId    String?
+  tipo      NotificationType
+  titulo    String
+  mensagem  String
+  lida      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit Unit? @relation(fields: [unitId], references: [id])
+
+  @@index([userId])
+  @@index([lida])
+  @@index([createdAt])
+}
+
+// --- Integracoes ---
+
+model Integration {
+  id           String            @id @default(uuid())
+  nome         String
+  tipo         String
+  status       IntegrationStatus @default(ativo)
+  configuracao Json?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  logs     IntegrationLog[]
+  mappings IntegrationMapping[]
+
+  @@index([status])
+}
+
+model IntegrationLog {
+  id            String               @id @default(uuid())
+  integrationId String
+  tipo          IntegrationLogType
+  status        IntegrationLogStatus
+  payload       Json?
+  erro          String?
+  createdAt     DateTime             @default(now())
+
+  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model IntegrationMapping {
+  id             String @id @default(uuid())
+  integrationId  String
+  campoExterno   String
+  campoInterno   String
+  transformacao  String?
+
+  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+}
+
+// ===================== MODELOS RH =====================
+
+// --- Cargos e Salarios ---
+
+model FamiliaCargo {
+  id        String   @id @default(uuid())
+  nome      String   @unique
+  descricao String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cargos Cargo[]
+
+  @@index([nome])
+}
+
+model Cargo {
+  id                  String      @id @default(uuid())
+  familiaId           String?
+  nome                String
+  codigo              String?     @unique
+  nivel               NivelCargo  @default(junior)
+  descricao           String?
+  responsabilidades   String?
+  requisitos          String?
+  cargaHorariaSemanal Int         @default(44)
+  status              StatusCargo @default(ativo)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  familia      FamiliaCargo?  @relation(fields: [familiaId], references: [id], onDelete: SetNull)
+  faixas       FaixaSalarial[]
+  colaboradores Colaborador[]
+
+  @@index([familiaId])
+  @@index([status])
+  @@index([nome])
+}
+
+model FaixaSalarial {
+  id             String     @id @default(uuid())
+  cargoId        String
+  nivel          NivelCargo
+  salarioMinimo  Float
+  salarioMedio   Float
+  salarioMaximo  Float
+  moeda          String     @default("BRL")
+  vigenteDe      DateTime
+  vigenteAte     DateTime?
+  createdAt      DateTime   @default(now())
+
+  cargo Cargo @relation(fields: [cargoId], references: [id], onDelete: Cascade)
+
+  @@unique([cargoId, nivel, vigenteDe])
+  @@index([cargoId])
+}
+
+// --- Colaboradores ---
+
+model Colaborador {
+  id                  String            @id @default(uuid())
+  userId              String?           @unique
+  unitId              String
+  cargoId             String?
+  gestorDiretoId      String?
+  departamento        String?
+  matricula           String            @unique
+  pin                 String?           @unique  // PIN 6 digitos para acesso ao totem, auto-gerado
+  nome                String
+  primeiroNome        String?
+  nomeSocial          String?
+  dataNascimento      DateTime?
+  genero              GeneroColaborador?
+  estadoCivil         EstadoCivil?
+  nacionalidade       String?           @default("Brasileiro")
+  naturalidade        String?
+  cpf                 String?           @unique
+  rg                  String?
+  rgOrgao             String?
+  rgDataEmissao       DateTime?
+  ctpsNumero          String?
+  ctpsSerie           String?
+  ctpsUF              String?
+  pisNit              String?
+  cnhNumero           String?
+  cnhCategoria        String?
+  cnhValidade         DateTime?
+  tituloEleitor       String?
+  reservista          String?
+  email               String?
+  emailCorporativo    String?
+  telefone            String?
+  celular             String?
+  tipoContrato        TipoContrato      @default(clt)
+  dataAdmissao        DateTime?
+  dataDemissao        DateTime?
+  status              StatusColaborador  @default(ativo)
+  fotoUrl             String?
+  salarioBase         Float?
+  cargaHorariaSemanal Int               @default(44)
+  observacoes         String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  unit          Unit         @relation(fields: [unitId], references: [id])
+  cargo         Cargo?       @relation(fields: [cargoId], references: [id], onDelete: SetNull)
+  gestorDireto  Colaborador? @relation("GestorDireto", fields: [gestorDiretoId], references: [id], onDelete: SetNull)
+  subordinados  Colaborador[] @relation("GestorDireto")
+
+  endereco              EnderecoColaborador?
+  contatosEmergencia    ContatoEmergencia[]
+  dependentes           Dependente[]
+  formacoes             FormacaoAcademica[]
+  historicoSalarios     HistoricoSalario[]
+  historicoCargos       HistoricoCargo[]
+  admissaoDigital       AdmissaoDigital?
+  processoDesligamento  ProcessoDesligamento?
+  periodosAquisitivos   PeriodoAquisitivo[]
+  ferias                Ferias[]
+  documentos            DocumentoColaborador[]
+  holerites             Holerite[]
+  beneficios            BeneficioColaborador[]
+  examesOcupacionais    ExameOcupacional[]
+  escalaPonto           EscalaPonto?
+  registrosPonto        RegistroPonto[]
+  ajustesPonto          AjustePonto[]
+  ocorrenciasPonto      OcorrenciaPonto[]
+  fechamentosPonto      FechamentoPonto[]
+  avaliacoesRecebidas   AvaliacaoDesempenho[] @relation("AvaliacaoAvaliado")
+  avaliacoesFeitas      AvaliacaoDesempenho[] @relation("AvaliacaoAvaliador")
+  metas                 MetaColaborador[]
+  visualizacoesComunicados ComunicadoVisualizacao[]
+  checklistTemplates       ChecklistTemplate[]      @relation("TemplateResponsavel")
+  checklistExecucoes       ChecklistExecution[]     @relation("ExecucaoResponsavel")
+  checklistItens           ChecklistItem[]          @relation("ItemResponsavel")
+  unidades                 ColaboradorUnit[]
+  requisicoes              PurchaseRequest[]
+
+  @@index([unitId])
+  @@index([cargoId])
+  @@index([status])
+  @@index([cpf])
+  @@index([matricula])
+  @@index([gestorDiretoId])
+}
+
+model ColaboradorUnit {
+  id            String   @id @default(uuid())
+  colaboradorId String
+  unitId        String
+  createdAt     DateTime @default(now())
+
+  colaborador Colaborador      @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  unit        Unit             @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  permissoes  TotemPermissao[]
+
+  @@unique([colaboradorId, unitId])
+  @@index([colaboradorId])
+  @@index([unitId])
+}
+
+model TotemPermissao {
+  id                String      @id @default(uuid())
+  colaboradorUnitId String
+  permissao         TotemModulo
+
+  colaboradorUnit ColaboradorUnit @relation(fields: [colaboradorUnitId], references: [id], onDelete: Cascade)
+
+  @@unique([colaboradorUnitId, permissao])
+  @@index([colaboradorUnitId])
+}
+
+model EnderecoColaborador {
+  id            String      @id @default(uuid())
+  colaboradorId String      @unique
+  cep           String?
+  logradouro    String?
+  numero        String?
+  complemento   String?
+  bairro        String?
+  cidade        String?
+  uf            String?
+  updatedAt     DateTime    @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+}
+
+model ContatoEmergencia {
+  id            String      @id @default(uuid())
+  colaboradorId String
+  nome          String
+  parentesco    String
+  telefone      String
+  celular       String?
+  createdAt     DateTime    @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+}
+
+model Dependente {
+  id             String      @id @default(uuid())
+  colaboradorId  String
+  nome           String
+  parentesco     String
+  dataNascimento DateTime?
+  cpf            String?
+  createdAt      DateTime    @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+}
+
+model FormacaoAcademica {
+  id            String      @id @default(uuid())
+  colaboradorId String
+  nivel         String      // fundamental, medio, tecnico, graduacao, pos, mestrado, doutorado
+  curso         String?
+  instituicao   String?
+  anoConclusao  Int?
+  status        String      @default("completo") // completo, incompleto, em_andamento
+  createdAt     DateTime    @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+}
+
+model HistoricoSalario {
+  id               String      @id @default(uuid())
+  colaboradorId    String
+  salarioAnterior  Float?
+  salarioNovo      Float
+  motivo           String?     // admissao, promocao, reajuste, acordo_coletivo, correcao
+  dataEfetivo      DateTime
+  registradoPorId  String
+  createdAt        DateTime    @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+  @@index([dataEfetivo])
+}
+
+model HistoricoCargo {
+  id               String      @id @default(uuid())
+  colaboradorId    String
+  cargoAnteriorId  String?
+  cargoNovoId      String
+  motivo           String?
+  dataEfetivo      DateTime
+  registradoPorId  String
+  createdAt        DateTime    @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+  @@index([dataEfetivo])
+}
+
+// --- Admissao Digital ---
+
+model AdmissaoDigital {
+  id                  String         @id @default(uuid())
+  colaboradorId       String         @unique
+  token               String         @unique @default(uuid())
+  status              StatusAdmissao @default(rascunho)
+  emailEnviado        String?
+  dataEnvio           DateTime?
+  dataExpiracao       DateTime?
+  dataPreenchimento   DateTime?
+  dadosPreenchidos    Json?
+  observacoes         String?
+  aprovadoPorId       String?
+  dataAprovacao       DateTime?
+  criadoPorId         String
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  criadoPor   User        @relation("AdmissaoCriador", fields: [criadoPorId], references: [id])
+  aprovadoPor User?       @relation("AdmissaoAprovador", fields: [aprovadoPorId], references: [id])
+
+  @@index([token])
+  @@index([status])
+  @@index([colaboradorId])
+}
+
+// --- Desligamento ---
+
+model ProcessoDesligamento {
+  id               String             @id @default(uuid())
+  colaboradorId    String             @unique
+  tipo             TipoDesligamento
+  status           StatusDesligamento @default(pendente)
+  dataAviso        DateTime?
+  dataDesligamento DateTime
+  motivoDetalhado  String?
+  entrevistaDeRetencao Boolean        @default(false)
+  observacoes      String?
+  checklistItems   Json?
+  registradoPorId  String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  colaborador   Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  registradoPor User        @relation(fields: [registradoPorId], references: [id])
+
+  @@index([status])
+  @@index([dataDesligamento])
+}
+
+// --- Ferias ---
+
+model PeriodoAquisitivo {
+  id             String                  @id @default(uuid())
+  colaboradorId  String
+  numero         Int
+  dataInicio     DateTime
+  dataFim        DateTime
+  status         StatusPeriodoAquisitivo @default(em_curso)
+  diasDisponiveis Int                    @default(30)
+  diasGozados    Int                     @default(0)
+  diasVendidos   Int                     @default(0)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  ferias      Ferias[]
+
+  @@unique([colaboradorId, numero])
+  @@index([colaboradorId])
+  @@index([status])
+}
+
+model Ferias {
+  id                  String       @id @default(uuid())
+  colaboradorId       String
+  periodoAquisitivoId String
+  status              StatusFerias @default(solicitado)
+  dataInicio          DateTime
+  dataFim             DateTime
+  diasSolicitados     Int
+  abonoPecuniario     Int          @default(0)
+  observacoes         String?
+  motivoReprovacao    String?
+  solicitadoPorId     String
+  aprovadoPorId       String?
+  dataAprovacao       DateTime?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  colaborador       Colaborador       @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  periodoAquisitivo PeriodoAquisitivo @relation(fields: [periodoAquisitivoId], references: [id])
+  solicitadoPor     User              @relation("FeriasSolicitante", fields: [solicitadoPorId], references: [id])
+  aprovadoPor       User?             @relation("FeriasAprovador", fields: [aprovadoPorId], references: [id])
+
+  @@index([colaboradorId])
+  @@index([periodoAquisitivoId])
+  @@index([status])
+  @@index([dataInicio])
+}
+
+// --- Documentos e Contratos ---
+
+model DocumentoColaborador {
+  id            String            @id @default(uuid())
+  colaboradorId String
+  tipo          TipoDocumentoRH
+  nome          String
+  descricao     String?
+  arquivoUrl    String?
+  tamanhoBytes  Int?
+  mimeType      String?
+  vencimento    DateTime?
+  status        StatusDocumentoRH @default(ativo)
+  uploadPorId   String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  uploadPor   User        @relation(fields: [uploadPorId], references: [id])
+
+  @@index([colaboradorId])
+  @@index([tipo])
+  @@index([status])
+  @@index([vencimento])
+}
+
+// --- Holerites ---
+
+model Holerite {
+  id            String         @id @default(uuid())
+  colaboradorId String
+  competencia   String         // formato YYYY-MM
+  salarioBruto  Float
+  descontos     Json           @default("[]") // [{descricao, valor}]
+  proventos     Json           @default("[]") // [{descricao, valor}]
+  salarioLiquido Float
+  status        StatusHolerite @default(rascunho)
+  arquivoUrl    String?
+  observacoes   String?
+  geradoPorId   String
+  publicadoEm   DateTime?
+  visualizadoEm DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  geradoPor   User        @relation(fields: [geradoPorId], references: [id])
+
+  @@unique([colaboradorId, competencia])
+  @@index([colaboradorId])
+  @@index([competencia])
+  @@index([status])
+}
+
+// --- Beneficios ---
+
+model Beneficio {
+  id           String        @id @default(uuid())
+  nome         String        @unique
+  tipo         TipoBeneficio
+  descricao    String?
+  valorPadrao  Float?
+  status       StatusCargo   @default(ativo)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  colaboradores BeneficioColaborador[]
+
+  @@index([tipo])
+  @@index([status])
+}
+
+model BeneficioColaborador {
+  id            String                    @id @default(uuid())
+  colaboradorId String
+  beneficioId   String
+  valorMensal   Float?
+  dataInicio    DateTime
+  dataFim       DateTime?
+  status        StatusBeneficioColaborador @default(ativo)
+  observacoes   String?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  beneficio   Beneficio   @relation(fields: [beneficioId], references: [id])
+
+  @@unique([colaboradorId, beneficioId])
+  @@index([colaboradorId])
+  @@index([beneficioId])
+  @@index([status])
+}
+
+// --- Exames Ocupacionais (ASO) ---
+
+model ExameOcupacional {
+  id            String               @id @default(uuid())
+  colaboradorId String
+  tipo          TipoExameOcupacional
+  dataExame     DateTime
+  dataVencimento DateTime?
+  medico        String?
+  crmMedico     String?
+  resultado     ResultadoExame?
+  restricoes    String?
+  observacoes   String?
+  arquivoUrl    String?
+  status        StatusExame          @default(agendado)
+  agendadoPorId String
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  colaborador  Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  agendadoPor  User        @relation(fields: [agendadoPorId], references: [id])
+
+  @@index([colaboradorId])
+  @@index([tipo])
+  @@index([status])
+  @@index([dataVencimento])
+}
+
+// --- Controle de Ponto ---
+
+model EscalaPonto {
+  id              String   @id @default(uuid())
+  colaboradorId   String   @unique
+  horarioEntrada  String   // "08:00"
+  horarioSaida    String   // "17:00"
+  intervaloMinutos Int     @default(60)
+  diasSemana      Json     // ["seg","ter","qua","qui","sex"]
+  toleranciaMinutos Int    @default(10)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+}
+
+model RegistroPonto {
+  id            String             @id @default(uuid())
+  colaboradorId String
+  tipo          TipoRegistroPonto
+  dataHora      DateTime
+  localizacao   String?
+  dispositivo   String?
+  foto          String?
+  status        StatusRegistroPonto @default(pendente)
+  observacoes   String?
+  ajusteId      String?
+  createdAt     DateTime           @default(now())
+
+  colaborador Colaborador  @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  ajuste      AjustePonto? @relation(fields: [ajusteId], references: [id])
+
+  @@index([colaboradorId])
+  @@index([dataHora])
+  @@index([status])
+}
+
+model AjustePonto {
+  id              String             @id @default(uuid())
+  colaboradorId   String
+  data            DateTime           @db.Date
+  tipo            TipoRegistroPonto
+  dataHoraOriginal DateTime?
+  dataHoraAjuste  DateTime
+  motivo          String
+  status          StatusRegistroPonto @default(pendente)
+  aprovadoPorId   String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  colaborador  Colaborador    @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  aprovadoPor  User?          @relation("AjusteAprovador", fields: [aprovadoPorId], references: [id])
+  registros    RegistroPonto[]
+
+  @@index([colaboradorId])
+  @@index([data])
+  @@index([status])
+}
+
+model OcorrenciaPonto {
+  id            String              @id @default(uuid())
+  colaboradorId String
+  data          DateTime            @db.Date
+  tipo          TipoOcorrenciaPonto
+  minutosImpacto Int               @default(0) // minutos de atraso/hora extra/etc
+  justificativa String?
+  documentoUrl  String?
+  createdAt     DateTime            @default(now())
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@index([colaboradorId])
+  @@index([data])
+  @@index([tipo])
+}
+
+model FechamentoPonto {
+  id              String                @id @default(uuid())
+  colaboradorId   String
+  competencia     String                // YYYY-MM
+  status          StatusFechamentoPonto @default(aberto)
+  totalDiasTrabalhados Int              @default(0)
+  totalHorasTrabalhadas Float           @default(0)
+  totalHorasExtras  Float               @default(0)
+  totalAtrasos      Float               @default(0) // em horas
+  totalFaltas       Int                 @default(0)
+  resumo          Json?                 // dados detalhados
+  aprovadoPorId   String?
+  dataAprovacao   DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  aprovadoPor User?       @relation("FechamentoAprovador", fields: [aprovadoPorId], references: [id])
+
+  @@unique([colaboradorId, competencia])
+  @@index([colaboradorId])
+  @@index([competencia])
+  @@index([status])
+}
+
+// ===================== FASE 5 — DESEMPENHO & COMUNICAÇÃO =====================
+
+model CicloAvaliacao {
+  id          String               @id @default(uuid())
+  nome        String
+  descricao   String?
+  status      StatusCicloAvaliacao @default(planejamento)
+  periodoRef  String               // ex: "2024-S1", "2024-Anual"
+  dataInicio  DateTime             @db.Date
+  dataFim     DateTime             @db.Date
+  criadoPorId String
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  criadoPor  User                  @relation("CiclosCriados", fields: [criadoPorId], references: [id])
+  avaliacoes AvaliacaoDesempenho[]
+  metas      MetaColaborador[]
+
+  @@index([status])
+  @@index([periodoRef])
+}
+
+model AvaliacaoDesempenho {
+  id                  String          @id @default(uuid())
+  cicloId             String
+  colaboradorId       String
+  avaliadorId         String?         // null = autoavaliação
+  tipo                TipoAvaliacao
+  status              StatusAvaliacao @default(pendente)
+  pontuacaoTotal      Float?
+  respostas           Json?           // { criterio: pontuacao, comentario }
+  comentarios         String?
+  planoDesenvolvimento String?
+  dataEnvio           DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  ciclo       CicloAvaliacao @relation(fields: [cicloId], references: [id], onDelete: Cascade)
+  colaborador Colaborador    @relation("AvaliacaoAvaliado", fields: [colaboradorId], references: [id], onDelete: Cascade)
+  avaliador   Colaborador?   @relation("AvaliacaoAvaliador", fields: [avaliadorId], references: [id])
+
+  @@index([cicloId])
+  @@index([colaboradorId])
+  @@index([avaliadorId])
+  @@index([status])
+}
+
+model MetaColaborador {
+  id              String     @id @default(uuid())
+  colaboradorId   String
+  cicloId         String?
+  titulo          String
+  descricao       String?
+  categoria       String?
+  indicador       String?
+  metaValor       Float?
+  valorAtual      Float      @default(0)
+  unidade         String?    // %, R$, qtd
+  dataLimite      DateTime?  @db.Date
+  status          StatusMeta @default(em_andamento)
+  criadoPorId     String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  colaborador Colaborador     @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  ciclo       CicloAvaliacao? @relation(fields: [cicloId], references: [id])
+  criadoPor   User            @relation("MetasCriadas", fields: [criadoPorId], references: [id])
+
+  @@index([colaboradorId])
+  @@index([cicloId])
+  @@index([status])
+}
+
+model Comunicado {
+  id            String               @id @default(uuid())
+  titulo        String
+  conteudo      String
+  tipo          TipoComunicado       @default(comunicado)
+  prioridade    PrioridadeComunicado @default(normal)
+  publicadoEm  DateTime?
+  expiresAt     DateTime?
+  fixado        Boolean              @default(false)
+  arquivoUrl    String?
+  destinatarios String[]             // unitIds ou ['todos']
+  criadoPorId   String
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  criadoPor     User                    @relation("ComunicadosCriados", fields: [criadoPorId], references: [id])
+  visualizacoes ComunicadoVisualizacao[]
+
+  @@index([tipo])
+  @@index([prioridade])
+  @@index([publicadoEm])
+  @@index([fixado])
+}
+
+model ComunicadoVisualizacao {
+  id            String    @id @default(uuid())
+  comunicadoId  String
+  colaboradorId String
+  visualizadoEm DateTime  @default(now())
+
+  comunicado  Comunicado  @relation(fields: [comunicadoId], references: [id], onDelete: Cascade)
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@unique([comunicadoId, colaboradorId])
+  @@index([comunicadoId])
+  @@index([colaboradorId])
+}
+
+// --- Encomendas ---
+
+enum EncomendaStatus {
+  pendente
+  pronta
+  retirada
+  cancelada
+}
+
+model Encomenda {
+  id              String          @id @default(uuid())
+  numeroOrdem     Int             @default(autoincrement())
+  clienteNome     String
+  clienteTelefone String?
+  dataRetirada    DateTime
+  horaRetirada    String
+  observacoes     String?
+  valorCaucao     Decimal         @default(0) @db.Decimal(10, 2)
+  valorTotal      Decimal         @default(0) @db.Decimal(10, 2)
+  status          EncomendaStatus @default(pendente)
+  unitId          String
+  criadoPorId     String?
+  criadoPorNome   String?
+  concluidoPorId  String?
+  concluidoEm     DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  unit         Unit            @relation(fields: [unitId], references: [id])
+  criadoPor    User?           @relation("EncomendaCriador", fields: [criadoPorId], references: [id])
+  concluidoPor User?           @relation("EncomendaConcluidor", fields: [concluidoPorId], references: [id])
+  itens        EncomendaItem[]
+
+  @@index([unitId])
+  @@index([status])
+  @@index([dataRetirada])
+  @@index([createdAt])
+}
+
+model EncomendaItem {
+  id          String    @id @default(uuid())
+  encomendaId String
+  descricao   String
+  quantidade  Decimal   @db.Decimal(10, 3)
+  unidade     String    @default("un")
+  observacao  String?
+  createdAt   DateTime  @default(now())
+
+  encomenda Encomenda @relation(fields: [encomendaId], references: [id], onDelete: Cascade)
+
+  @@index([encomendaId])
+}
+
+// --- Refresh Token ---
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
