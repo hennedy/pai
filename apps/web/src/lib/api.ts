@@ -1,8 +1,7 @@
-const SERVER_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 function getApiUrl() {
-  if (typeof window === 'undefined') return SERVER_API_URL
-  return `http://${window.location.hostname}:3001`
+  return API_BASE_URL
 }
 
 interface FetchOptions extends RequestInit {

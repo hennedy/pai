@@ -71,10 +71,12 @@ export async function buildApp() {
 
   // Plugins
   await app.register(helmet, { contentSecurityPolicy: false })
+  const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? (process.env.FRONTEND_URL || '').split(',').map((o) => o.trim()).filter(Boolean)
+    : true
+
   await app.register(cors, {
-    origin: process.env.NODE_ENV === 'production'
-      ? process.env.FRONTEND_URL
-      : true,
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
