@@ -393,7 +393,7 @@ export async function purchaseRoutes(app: FastifyInstance) {
 
     // Agrupar por produto
     const consolidado = new Map<string, {
-      product: { id: string; nome: string; sku: string; unidadeMedida: string; codigoCotacao: string | null }
+      product: { id: string; nome: string; sku: string | null; unidadeMedida: string; codigoCotacao: string | null }
       totalQuantidade: number
       unidades: { unit: { id: string; nome: string; codigo: string }; quantidade: number; solicitacoes: number }[]
     }>()

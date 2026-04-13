@@ -177,7 +177,7 @@ export async function utensilCountRoutes(app: FastifyInstance) {
     const count = await prisma.$transaction(async (tx) => {
       const created = await tx.utensilCount.create({
         data: {
-          unitId: unitFilter.unitId,
+          unitId: unitFilter.unitId as string,
           turno: turno as any,
           tipo: tipo as any,
           responsavelId: user.userId,

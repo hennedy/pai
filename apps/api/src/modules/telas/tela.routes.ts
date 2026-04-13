@@ -123,7 +123,7 @@ export async function telaRoutes(app: FastifyInstance) {
 
     const contagem = await prisma.telaContagem.create({
       data: {
-        unitId: unitFilter.unitId,
+        unitId: unitFilter.unitId as string,
         responsavelId: user.userId,
         telasCruas,
         telasAssadas,

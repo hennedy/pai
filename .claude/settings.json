@@ -179,7 +179,8 @@
       "Bash(ls -la /c/App/pai/apps/web/src/app/\\\\\\(app\\\\\\)/configuracoes/)",
       "Bash(ls -la /c/App/pai/apps/web/src/app/\\\\\\(app\\\\\\)/configuracoes/sistema/)",
       "Bash(find . -name prisma -path */bin/*)",
-      "Bash(packages/database/node_modules/.bin/prisma db:*)"
+      "Bash(packages/database/node_modules/.bin/prisma db:*)",
+      "Read(//c/Users/hennedy/.claude/projects/c--App-pai/4813b003-dfb6-4d84-a0d2-bb85d75815ec/tool-results/**)"
     ],
     "additionalDirectories": [
       "\\tmp",

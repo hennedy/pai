@@ -195,7 +195,7 @@ export async function descartesRoutes(app: FastifyInstance) {
     const count = await prisma.$transaction(async (tx) => {
       const created = await tx.descartesCount.create({
         data: {
-          unitId: unitFilter.unitId,
+          unitId: unitFilter.unitId as string,
           responsavelId: user.userId,
           observacao: observacao || null,
           items: {

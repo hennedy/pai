@@ -64,7 +64,7 @@ export async function portalRoutes(app: FastifyInstance) {
         orderBy: { competencia: 'desc' },
         select: {
           id: true, competencia: true, salarioBruto: true, salarioLiquido: true,
-          totalDescontos: true, totalProventos: true, arquivoUrl: true,
+          descontos: true, proventos: true, arquivoUrl: true,
           status: true, createdAt: true,
         },
       }),
@@ -125,8 +125,8 @@ export async function portalRoutes(app: FastifyInstance) {
         periodoAquisitivoId: data.periodoAquisitivoId,
         dataInicio: new Date(data.dataInicio),
         dataFim: new Date(data.dataFim),
-        diasGozados: dias,
-        diasVendidos: data.diasVendidos,
+        diasSolicitados: dias,
+        abonoPecuniario: data.diasVendidos,
         observacoes: data.observacoes,
         solicitadoPorId: user.sub,
       },
@@ -147,8 +147,8 @@ export async function portalRoutes(app: FastifyInstance) {
       where: { colaboradorId: colab.id, status: 'ativo' },
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true, tipo: true, titulo: true, descricao: true,
-        arquivoUrl: true, dataVencimento: true, status: true, createdAt: true,
+        id: true, tipo: true, nome: true, descricao: true,
+        arquivoUrl: true, vencimento: true, status: true, createdAt: true,
       },
     })
 
@@ -178,10 +178,9 @@ export async function portalRoutes(app: FastifyInstance) {
       prisma.comunicado.findMany({
         where: {
           publicadoEm: { lte: now },
-          OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
-          OR: [
-            { destinatarios: { has: 'todos' } },
-            { destinatarios: { has: colab.unitId } },
+          AND: [
+            { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+            { OR: [{ destinatarios: { has: 'todos' } }, { destinatarios: { has: colab.unitId } }] },
           ],
         },
         skip, take: limit,
@@ -329,9 +328,9 @@ export async function portalRoutes(app: FastifyInstance) {
     if (!colab) return reply.status(404).send({ error: 'Colaborador não encontrado', code: 'NOT_FOUND' })
 
     const beneficios = await prisma.beneficioColaborador.findMany({
-      where: { colaboradorId: colab.id, ativo: true },
+      where: { colaboradorId: colab.id, status: 'ativo' },
       include: {
-        beneficio: { select: { nome: true, tipo: true, descricao: true, operadora: true } },
+        beneficio: { select: { nome: true, tipo: true, descricao: true } },
       },
       orderBy: { dataInicio: 'desc' },
     })

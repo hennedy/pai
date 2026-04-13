@@ -86,8 +86,8 @@ describe('Autenticacao - Regras de Negocio', () => {
     })
 
     it('deve rejeitar senha atual incorreta', () => {
-      const senhaAtual = 'MinhaSenh@123'
-      const senhaInformada = 'SenhaErrada'
+      const senhaAtual: string = 'MinhaSenh@123'
+      const senhaInformada: string = 'SenhaErrada'
       const senhaCorreta = senhaAtual === senhaInformada
 
       expect(senhaCorreta).toBe(false)

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '@pai/database'
+import { prisma, Prisma } from '@pai/database'
 import { calcPagination, calcTotalPages } from '@pai/utils'
 import { authenticate, requireRole } from '../../middlewares/auth.middleware'
 import { createAuditLog } from '../../lib/audit'
@@ -131,7 +131,7 @@ export async function integrationRoutes(app: FastifyInstance) {
         data: {
           nome: body.nome,
           tipo: body.tipo,
-          configuracao: body.configuracao || undefined,
+          configuracao: (body.configuracao ?? null) as any,
         },
       })
 

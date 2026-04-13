@@ -1,4 +1,10 @@
 import Fastify from 'fastify'
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate(request: import('fastify').FastifyRequest, reply: import('fastify').FastifyReply): Promise<void>
+  }
+}
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import cookie from '@fastify/cookie'
@@ -101,7 +107,7 @@ export async function buildApp() {
   })
 
   // Formato padrao de erro
-  app.setErrorHandler(async (error, request, reply) => {
+  app.setErrorHandler(async (error: any, request, reply) => {
     request.log.error(error)
 
     if (error.validation) {

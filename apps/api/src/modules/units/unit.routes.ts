@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '@pai/database'
+import { prisma, Prisma } from '@pai/database'
 import { calcPagination, calcTotalPages, generateUnitCode } from '@pai/utils'
 import { authenticate, requireRole, requireUnit, getUnitFilter } from '../../middlewares/auth.middleware'
 import { createAuditLog } from '../../lib/audit'
@@ -182,7 +182,7 @@ export async function unitRoutes(app: FastifyInstance) {
         responsavelId: body.responsavelId ?? null,
         horarioAbertura: body.horarioAbertura ?? null,
         horarioFechamento: body.horarioFechamento ?? null,
-        diasFuncionamento: body.diasFuncionamento ?? null,
+        diasFuncionamento: (body.diasFuncionamento ?? null) as any,
         latitude: body.latitude ?? null,
         longitude: body.longitude ?? null,
         raioValidacaoMetros: body.raioValidacaoMetros ?? null,
@@ -329,7 +329,7 @@ export async function unitRoutes(app: FastifyInstance) {
         unitId: id,
         tipo: body.tipo as any,
         nome: body.nome,
-        configuracao: body.configuracao ?? null,
+        configuracao: (body.configuracao ?? null) as any,
       },
     })
 

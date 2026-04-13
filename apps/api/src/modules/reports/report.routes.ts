@@ -93,7 +93,7 @@ export async function reportRoutes(app: FastifyInstance) {
         unidade_medida: r.product.unidadeMedida,
         marca: r.marca || '',
         observacao: r.observacao || '',
-        solicitado_por: r.solicitadoPor.nome,
+        solicitado_por: r.solicitadoPor?.nome ?? '',
         data: r.createdAt.toISOString(),
       }))
 
@@ -255,9 +255,9 @@ export async function reportRoutes(app: FastifyInstance) {
       prisma.checklistExecution.findMany({
         where,
         include: {
-          template: { select: { id: true, nome: true, setor: true } },
+          template: { select: { id: true, nome: true, sector: true } },
           unit: { select: { id: true, nome: true, codigo: true } },
-          executadoPor: { select: { id: true, nome: true } },
+          responsavel: { select: { id: true, nome: true } },
         },
         skip,
         take,
@@ -275,12 +275,12 @@ export async function reportRoutes(app: FastifyInstance) {
     // Exportar CSV se solicitado
     if (query.format === 'csv') {
       const csvData = data.map((r) => ({
-        template: r.template.nome,
-        setor: r.template.setor || '',
-        unidade: r.unit.nome,
+        template: (r as any).template?.nome ?? '',
+        setor: (r as any).template?.sector ?? '',
+        unidade: (r as any).unit?.nome ?? '',
         turno: r.turno,
         status: r.status,
-        executado_por: r.executadoPor.nome,
+        executado_por: (r as any).responsavel?.nome ?? '',
         data: r.data.toISOString(),
       }))
 

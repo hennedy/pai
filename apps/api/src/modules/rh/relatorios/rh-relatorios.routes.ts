@@ -135,7 +135,7 @@ export async function rhRelatoriosRoutes(app: FastifyInstance) {
 
     // Tipos de desligamento
     const tiposDesligamento = await prisma.processoDesligamento.groupBy({
-      by: ['tipoDesligamento'],
+      by: ['tipo'],
       where: { createdAt: { gte: dataInicio, lte: dataFim } },
       _count: { id: true },
     })
@@ -255,22 +255,22 @@ export async function rhRelatoriosRoutes(app: FastifyInstance) {
       prisma.beneficio.findMany({
         select: {
           id: true, nome: true, tipo: true,
-          _count: { select: { colaboradores: { where: { ativo: true } } } },
+          _count: { select: { colaboradores: { where: { status: 'ativo' } } } },
         },
         orderBy: { colaboradores: { _count: 'desc' } },
       }),
       prisma.beneficioColaborador.aggregate({
-        where: { ativo: true },
-        _sum: { valorColaborador: true, valorEmpresa: true },
+        where: { status: 'ativo' },
+        _sum: { valorMensal: true },
       }),
-      prisma.beneficioColaborador.count({ where: { ativo: true } }),
+      prisma.beneficioColaborador.count({ where: { status: 'ativo' } }),
     ])
 
     return {
       porBeneficio: porTipo,
       custoTotal: {
-        colaborador: custoTotal._sum.valorColaborador ?? 0,
-        empresa: custoTotal._sum.valorEmpresa ?? 0,
+        colaborador: custoTotal._sum?.valorMensal ?? 0,
+        empresa: 0,
       },
       totalAdesoes: adesao,
     }
@@ -290,7 +290,7 @@ export async function rhRelatoriosRoutes(app: FastifyInstance) {
     const [resumo, ultimas6] = await Promise.all([
       prisma.holerite.aggregate({
         where: { competencia: comp },
-        _sum: { salarioBruto: true, salarioLiquido: true, totalDescontos: true, totalProventos: true },
+        _sum: { salarioBruto: true, salarioLiquido: true },
         _count: { id: true },
         _avg: { salarioBruto: true, salarioLiquido: true },
       }),
@@ -307,12 +307,12 @@ export async function rhRelatoriosRoutes(app: FastifyInstance) {
     return {
       competencia: comp,
       resumo: {
-        totalBruto: resumo._sum.salarioBruto ?? 0,
-        totalLiquido: resumo._sum.salarioLiquido ?? 0,
-        totalDescontos: resumo._sum.totalDescontos ?? 0,
-        totalProventos: resumo._sum.totalProventos ?? 0,
-        qtdHolerites: resumo._count.id,
-        mediaBruto: resumo._avg.salarioBruto ?? 0,
+        totalBruto: resumo._sum?.salarioBruto ?? 0,
+        totalLiquido: resumo._sum?.salarioLiquido ?? 0,
+        totalDescontos: 0,
+        totalProventos: 0,
+        qtdHolerites: resumo._count?.id ?? 0,
+        mediaBruto: resumo._avg?.salarioBruto ?? 0,
       },
       historico: ultimas6.map((h) => ({
         competencia: h.competencia,

@@ -13,7 +13,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: 'token obrigatorio' })
     }
 
-    const impressora = await prisma.impressora.findUnique({
+    const impressora = await (prisma as any).impressora.findUnique({
       where:  { agentToken: token },
       select: { id: true, ip: true, porta: true, ativo: true },
     })
@@ -23,7 +23,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
     }
 
     // Atomicamente pega o job mais antigo e marca como processing
-    const job = await prisma.printJob.findFirst({
+    const job = await (prisma as any).printJob.findFirst({
       where:   { impressoraId: impressora.id, status: 'queued' },
       orderBy: { createdAt: 'asc' },
     })
@@ -32,7 +32,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
       return reply.send(null)
     }
 
-    await prisma.printJob.update({
+    await (prisma as any).printJob.update({
       where: { id: job.id },
       data:  { status: 'processing' },
     })
@@ -54,7 +54,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
 
     if (!token) return reply.status(400).send({ error: 'token obrigatorio' })
 
-    const job = await prisma.printJob.findUnique({
+    const job = await (prisma as any).printJob.findUnique({
       where:   { id },
       include: { impressora: { select: { agentToken: true } } },
     })
@@ -63,7 +63,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
       return reply.status(404).send({ error: 'Job nao encontrado' })
     }
 
-    await prisma.printJob.update({
+    await (prisma as any).printJob.update({
       where: { id },
       data:  { status: 'done' },
     })
@@ -82,7 +82,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
 
     if (!token) return reply.status(400).send({ error: 'token obrigatorio' })
 
-    const job = await prisma.printJob.findUnique({
+    const job = await (prisma as any).printJob.findUnique({
       where:   { id },
       include: { impressora: { select: { agentToken: true } } },
     })
@@ -91,7 +91,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
       return reply.status(404).send({ error: 'Job nao encontrado' })
     }
 
-    await prisma.printJob.update({
+    await (prisma as any).printJob.update({
       where: { id },
       data:  { status: 'error', error: String(error ?? 'Erro desconhecido') },
     })
@@ -104,7 +104,7 @@ export async function printJobsRoutes(app: FastifyInstance) {
   // =====================================================
   app.delete('/cleanup', async (_request, reply) => {
     const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000) // 24h atrás
-    const { count } = await prisma.printJob.deleteMany({
+    const { count } = await (prisma as any).printJob.deleteMany({
       where: {
         status:    { in: ['done', 'error'] },
         updatedAt: { lt: cutoff },
